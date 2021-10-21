@@ -3,6 +3,8 @@ package com.ugurkuyu.chat.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import com.google.firebase.firestore.FirebaseFirestore
 import com.ugurkuyu.chat.R
 import com.ugurkuyu.chat.databinding.ActivitySignInBinding
 

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "514335290916",
+    "project_id": "chat-575e4",
+    "storage_bucket": "chat-575e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:514335290916:android:8f83fc3382088ae9bf0ab1",
+        "android_client_info": {
+          "package_name": "com.ugurkuyu.chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "514335290916-s098j9gr8gseoi79tan5ebkofpoletov.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4YiBrKw4z-iDngN8xFz4t4j62TwQxmUA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "514335290916-s098j9gr8gseoi79tan5ebkofpoletov.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
