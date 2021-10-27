@@ -41,6 +41,7 @@
             app:riv_oval="true" />
 
         <TextView
+            android:id="@+id/txt_add_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_image"
@@ -140,6 +141,16 @@
             android:textStyle="bold"
             app:cornerRadius="@dimen/_8sdp"
             app:layout_constraintTop_toBottomOf="@id/edt_inputConfirmPassword" />
+
+        <ProgressBar
+            android:id="@+id/signUp_progressBar"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/btn_signUp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/btn_signUp" />
 
         <TextView
             android:id="@+id/txt_signIn"

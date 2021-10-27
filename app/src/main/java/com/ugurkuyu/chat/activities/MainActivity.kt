@@ -1,7 +1,8 @@
-package com.ugurkuyu.chat
+package com.ugurkuyu.chat.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.ugurkuyu.chat.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
