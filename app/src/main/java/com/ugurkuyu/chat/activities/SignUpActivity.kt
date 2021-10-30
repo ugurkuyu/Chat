@@ -25,7 +25,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var preferenceManager: PreferenceManager
-    private lateinit var encodedImage: String
+    private var encodedImage: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +63,7 @@ class SignUpActivity : AppCompatActivity() {
         user[Constants.KEY_NAME] = binding.edtInputName.text.toString()
         user[Constants.KEY_EMAIL] = binding.edtInputEmail.text.toString()
         user[Constants.KEY_PASSWORD] = binding.edtInputPassword.text.toString()
-        user[Constants.KEY_IMAGE] = encodedImage
+        user[Constants.KEY_IMAGE] = encodedImage!!
         database.collection(Constants.KEY_COLLECTION_USERS)
             .add(user)
             .addOnSuccessListener {
@@ -74,10 +74,9 @@ class SignUpActivity : AppCompatActivity() {
                     Constants.KEY_NAME,
                     binding.edtInputName.text.toString()
                 )
-                preferenceManager.putString(Constants.KEY_IMAGE, encodedImage)
+                preferenceManager.putString(Constants.KEY_IMAGE, encodedImage!!)
                 val intent = Intent(applicationContext, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK and Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
             }.addOnFailureListener {
                 loading(false)
@@ -116,32 +115,32 @@ class SignUpActivity : AppCompatActivity() {
 
 
     fun isValidSignUpDetails(): Boolean {
-        if (encodedImage == null) {
+        return if (encodedImage == null) {
             showToast("Select Profile Image ")
-            return false
+            false
         } else if (binding.edtInputName.text.toString().trim().isEmpty()) {
             showToast("Enter Name ")
-            return false
+            false
         } else if (binding.edtInputEmail.text.toString().trim().isEmpty()) {
             showToast("Enter Email ")
-            return false
+            false
         } else if (!Patterns.EMAIL_ADDRESS.matcher(binding.edtInputEmail.text.toString())
                 .matches()
         ) {
             showToast("Enter Valid Email Address ")
-            return false
+            false
         } else if (binding.edtInputPassword.text.toString().trim().isEmpty()) {
             showToast("Enter Password ")
-            return false
+            false
         } else if (binding.edtInputConfirmPassword.text.toString().trim().isEmpty()) {
             showToast("Confirm Your Password ")
-            return false
+            false
         } else if (binding.edtInputPassword.text.toString() != binding.edtInputConfirmPassword.text.toString()
         ) {
             showToast("Password doesn't match! ")
-            return false
+            false
         } else
-            return true
+            true
     }
 
     fun loading(isLoading: Boolean) {
