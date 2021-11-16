@@ -1,18 +1,19 @@
 package com.ugurkuyu.chat.activities
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.ugurkuyu.chat.R
 import com.ugurkuyu.chat.adapters.UsersAdapter
 import com.ugurkuyu.chat.databinding.ActivityUsersBinding
+import com.ugurkuyu.chat.listeners.UserListener
 import com.ugurkuyu.chat.models.User
 import com.ugurkuyu.chat.util.Constants
 import com.ugurkuyu.chat.util.PreferenceManager
 
-class UsersActivity : AppCompatActivity() {
+class UsersActivity : AppCompatActivity(), UserListener {
 
     private lateinit var binding: ActivityUsersBinding
     private lateinit var preferenceManager: PreferenceManager
@@ -52,7 +53,7 @@ class UsersActivity : AppCompatActivity() {
                     users.add(user)
                 }
                 if (users.size > 0) {
-                    val usersAdapter: UsersAdapter = UsersAdapter(users)
+                    val usersAdapter: UsersAdapter = UsersAdapter(users, this)
                     binding.recyclerView.adapter = usersAdapter
                     binding.recyclerView.visibility = View.VISIBLE
                 } else showErrorMessage()
@@ -72,5 +73,12 @@ class UsersActivity : AppCompatActivity() {
     fun showErrorMessage() {
         binding.txtErrorMessage.text = String.format("%s", "No user available")
         binding.txtErrorMessage.visibility = View.VISIBLE
+    }
+
+    override fun onUserClicked(user: User) {
+        val intent = Intent(applicationContext, ChatActivity::class.java)
+        intent.putExtra(Constants.KEY_USER, user)
+        startActivity(intent)
+        finish()
     }
 }

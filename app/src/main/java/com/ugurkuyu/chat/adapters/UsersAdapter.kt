@@ -8,9 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ugurkuyu.chat.databinding.ItemContainerUserBinding
+import com.ugurkuyu.chat.listeners.UserListener
 import com.ugurkuyu.chat.models.User
 
-class UsersAdapter(val users: List<User> = listOf<User>()) :
+class UsersAdapter(private val users: List<User> = listOf<User>(), val listener: UserListener) :
     RecyclerView.Adapter<UsersAdapter.UserViewHolder>() {
 
     inner class UserViewHolder(private val binding: ItemContainerUserBinding) :
@@ -19,6 +20,7 @@ class UsersAdapter(val users: List<User> = listOf<User>()) :
             binding.textName.text = user.name
             binding.textEmail.text = user.email
             binding.imageProfile.setImageBitmap(getUserImage(user.image))
+            binding.root.setOnClickListener { listener.onUserClicked(user)}
         }
     }
 
