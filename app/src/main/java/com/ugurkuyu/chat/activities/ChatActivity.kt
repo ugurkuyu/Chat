@@ -17,6 +17,7 @@ import com.ugurkuyu.chat.util.Constants
 import com.ugurkuyu.chat.util.PreferenceManager
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.Comparator
 
 class ChatActivity : AppCompatActivity() {
 
@@ -98,7 +99,7 @@ class ChatActivity : AppCompatActivity() {
                         chatMessages.add(chatMessage)
                     }
                 }
-                chatMessages.sortBy { it.dateObject == it.dateObject }
+                chatMessages.sortWith(compareBy { it.dateObject })
                 if (count == 0) adapter.notifyDataSetChanged()
                 else {
                     adapter.notifyItemRangeInserted(chatMessages.size, chatMessages.size)
