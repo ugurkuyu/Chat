@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Base64
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import com.ugurkuyu.chat.adapters.ChatAdapter
@@ -17,7 +18,7 @@ import com.ugurkuyu.chat.util.Constants
 import com.ugurkuyu.chat.util.PreferenceManager
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.Comparator
+import kotlin.collections.HashMap
 
 class ChatActivity : AppCompatActivity() {
 
@@ -27,6 +28,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var adapter: ChatAdapter
     private lateinit var preferenceManager: PreferenceManager
     private lateinit var database: FirebaseFirestore
+    private var conversationId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +57,23 @@ class ChatActivity : AppCompatActivity() {
         message[Constants.KEY_RECEIVER_ID] = receiverUser.id
         message[Constants.KEY_MESSAGE] = binding.edtInputMessage.text.toString()
         message[Constants.KEY_TIMESTAMP] = Date()
+        if (conversationId != null)
+            updateConversation(binding.edtInputMessage.text.toString())
+        else {
+            val conversation: HashMap<String, Any> = hashMapOf()
+            conversation[Constants.KEY_SENDER_ID] =
+                preferenceManager.getString(Constants.KEY_USER_ID)
+            conversation[Constants.KEY_SENDER_NAME] =
+                preferenceManager.getString(Constants.KEY_NAME)
+            conversation[Constants.KEY_SENDER_IMAGE] =
+                preferenceManager.getString(Constants.KEY_IMAGE)
+            conversation[Constants.KEY_RECEIVER_ID] = receiverUser.id
+            conversation[Constants.KEY_RECEIVER_NAME] = receiverUser.name
+            conversation[Constants.KEY_RECEIVER_IMAGE] = receiverUser.image
+            conversation[Constants.KEY_LAST_MESSAGE] = binding.edtInputMessage.text.toString()
+            conversation[Constants.KEY_TIMESTAMP] = Date()
+            addConversation(conversation)
+        }
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message)
         binding.edtInputMessage.text = null
     }
@@ -85,7 +104,7 @@ class ChatActivity : AppCompatActivity() {
                 val count = chatMessages.size
                 for (documentChange: DocumentChange in value.documentChanges) {
                     if (documentChange.type == DocumentChange.Type.ADDED) {
-                        val chatMessage = ChatMessage();
+                        val chatMessage = ChatMessage()
                         chatMessage.senderId =
                             documentChange.document.getString(Constants.KEY_SENDER_ID).toString()
                         chatMessage.receiverId =
@@ -108,6 +127,9 @@ class ChatActivity : AppCompatActivity() {
                 binding.recyclerViewChat.visibility = View.VISIBLE
             }
             binding.progressBarChat.visibility = View.GONE
+            if (conversationId == null) {
+                checkForConversation()
+            }
         }
 
     private fun getBitmapFromEncodedString(encodedImage: String): Bitmap {
@@ -132,4 +154,49 @@ class ChatActivity : AppCompatActivity() {
 
     private fun getReadableDateTime(date: Date?): String =
         SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date!!)
+
+    private fun addConversation(conversation: HashMap<String, Any>) {
+        database.collection(Constants.KEY_COLLECT_CONVERSATIONS)
+            .add(conversation)
+            .addOnSuccessListener { conversationId = it.id }
+    }
+
+    private fun updateConversation(message: String) {
+        val documentReference =
+            database.collection(Constants.KEY_COLLECT_CONVERSATIONS).document(conversationId!!)
+        documentReference.update(
+            Constants.KEY_LAST_MESSAGE,
+            message,
+            Constants.KEY_TIMESTAMP,
+            Date()
+        )
+    }
+
+    private fun checkForConversation() {
+        if (chatMessages.size != 0) {
+            checkForConversationRemotely(
+                preferenceManager.getString(Constants.KEY_USER_ID),
+                receiverUser.id
+            )
+            checkForConversationRemotely(
+                receiverUser.id,
+                preferenceManager.getString(Constants.KEY_USER_ID)
+            )
+        }
+    }
+
+    private fun checkForConversationRemotely(senderId: String, receiverId: String) {
+        database.collection(Constants.KEY_COLLECT_CONVERSATIONS)
+            .whereEqualTo(Constants.KEY_SENDER_ID, senderId)
+            .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverId)
+            .get()
+            .addOnCompleteListener(conversationCompleteListener)
+    }
+
+    private val conversationCompleteListener = OnCompleteListener<QuerySnapshot> {
+        if (it.isSuccessful && it.result != null && it.result!!.documents.size > 0) {
+            val documentSnapshot = it.result!!.documents[0]
+            conversationId = documentSnapshot.id
+        }
+    }
 }

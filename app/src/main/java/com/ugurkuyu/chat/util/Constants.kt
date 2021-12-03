@@ -17,5 +17,11 @@ class Constants {
         const val KEY_RECEIVER_ID: String = "receiverId"
         const val KEY_MESSAGE: String = "message"
         const val KEY_TIMESTAMP: String = "timestamp"
+        const val KEY_COLLECT_CONVERSATIONS: String = "conversations"
+        const val KEY_SENDER_NAME: String = "senderName"
+        const val KEY_RECEIVER_NAME: String = "receiverName"
+        const val KEY_SENDER_IMAGE: String = "senderImage"
+        const val KEY_RECEIVER_IMAGE: String = "receiverImage"
+        const val KEY_LAST_MESSAGE: String = "lastMessage"
     }
 }

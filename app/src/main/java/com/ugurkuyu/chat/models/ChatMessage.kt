@@ -8,5 +8,8 @@ data class ChatMessage(
     var receiverId: String = "",
     var message: String = "",
     var dateTime: String = "",
-    var dateObject: Date? = null
+    var dateObject: Date? = null,
+    var conversationId: String = "",
+    var conversationName: String = "",
+    var conversationImage: String = ""
 ) : Serializable
