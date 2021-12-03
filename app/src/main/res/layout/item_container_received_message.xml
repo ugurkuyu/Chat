@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_8sdp"
     android:padding="@dimen/_4sdp">
 
     <com.makeramen.roundedimageview.RoundedImageView
@@ -22,11 +23,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_4sdp"
         android:background="@drawable/background_received_message"
-        android:padding="@dimen/_12sdp"
+        android:paddingStart="@dimen/_12sdp"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingEnd="@dimen/_12sdp"
+        android:paddingBottom="@dimen/_8sdp"
         android:textColor="@color/white"
         android:textSize="@dimen/_13ssp"
         app:layout_constraintStart_toEndOf="@id/img_profile"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="wrap"
         app:layout_constraintWidth_percent="0.75" />
 
     <TextView
@@ -35,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_4sdp"
         android:textColor="@color/secondary_text"
-        android:textSize="@dimen/_10ssp"
+        android:textSize="@dimen/_8sdp"
         app:layout_constraintStart_toStartOf="@id/txt_message"
         app:layout_constraintTop_toBottomOf="@id/txt_message"
         tools:text="12:05" />

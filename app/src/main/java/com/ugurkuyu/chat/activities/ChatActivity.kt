@@ -1,15 +1,14 @@
 package com.ugurkuyu.chat.activities
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Base64
-import android.view.LayoutInflater
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
-import com.ugurkuyu.chat.R
 import com.ugurkuyu.chat.adapters.ChatAdapter
 import com.ugurkuyu.chat.databinding.ActivityChatBinding
 import com.ugurkuyu.chat.models.ChatMessage
@@ -18,8 +17,6 @@ import com.ugurkuyu.chat.util.Constants
 import com.ugurkuyu.chat.util.PreferenceManager
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class ChatActivity : AppCompatActivity() {
 
@@ -37,6 +34,7 @@ class ChatActivity : AppCompatActivity() {
         setListeners()
         loadReceiverDetails()
         init()
+        listenMessages()
     }
 
     private fun init() {
@@ -60,7 +58,56 @@ class ChatActivity : AppCompatActivity() {
         binding.edtInputMessage.text = null
     }
 
-    //private final EventListener<QuerySnapShot> eventListener = (value, error) -> {}
+    private fun listenMessages() {
+        database.collection(Constants.KEY_COLLECTION_CHAT)
+            .whereEqualTo(
+                Constants.KEY_SENDER_ID,
+                preferenceManager.getString(Constants.KEY_USER_ID)
+            )
+            .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverUser.id)
+            .addSnapshotListener(eventListener)
+        database.collection(Constants.KEY_COLLECTION_CHAT)
+            .whereEqualTo(Constants.KEY_SENDER_ID, receiverUser.id)
+            .whereEqualTo(
+                Constants.KEY_RECEIVER_ID,
+                preferenceManager.getString(Constants.KEY_USER_ID)
+            )
+            .addSnapshotListener(eventListener)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private val eventListener =
+        EventListener { value: QuerySnapshot?, error: FirebaseFirestoreException? ->
+            if (error != null)
+                return@EventListener
+            if (value != null) {
+                val count = chatMessages.size
+                for (documentChange: DocumentChange in value.documentChanges) {
+                    if (documentChange.type == DocumentChange.Type.ADDED) {
+                        val chatMessage = ChatMessage();
+                        chatMessage.senderId =
+                            documentChange.document.getString(Constants.KEY_SENDER_ID).toString()
+                        chatMessage.receiverId =
+                            documentChange.document.getString(Constants.KEY_RECEIVER_ID).toString()
+                        chatMessage.message =
+                            documentChange.document.getString(Constants.KEY_MESSAGE).toString()
+                        chatMessage.dateTime =
+                            getReadableDateTime(documentChange.document.getDate(Constants.KEY_TIMESTAMP))
+                        chatMessage.dateObject =
+                            documentChange.document.getDate(Constants.KEY_TIMESTAMP)
+                        chatMessages.add(chatMessage)
+                    }
+                }
+                chatMessages.sortBy { it.dateObject == it.dateObject }
+                if (count == 0) adapter.notifyDataSetChanged()
+                else {
+                    adapter.notifyItemRangeInserted(chatMessages.size, chatMessages.size)
+                    binding.recyclerViewChat.smoothScrollToPosition(chatMessages.size - 1)
+                }
+                binding.recyclerViewChat.visibility = View.VISIBLE
+            }
+            binding.progressBarChat.visibility = View.GONE
+        }
 
     private fun getBitmapFromEncodedString(encodedImage: String): Bitmap {
         val bytes: ByteArray = Base64.decode(encodedImage, Base64.DEFAULT)
@@ -82,6 +129,6 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    private fun getReadableDateTime(date: Date) =
-        SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date)
+    private fun getReadableDateTime(date: Date?): String =
+        SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date!!)
 }

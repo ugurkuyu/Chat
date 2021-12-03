@@ -19,10 +19,13 @@
         <entry key="..\:/AndroidProjects/Chat/app/src/main/res/layout/item_container_received_message.xml" value="0.24635416666666668" />
         <entry key="..\:/AndroidProjects/Chat/app/src/main/res/layout/item_container_sent_message.xml" value="0.24635416666666668" />
         <entry key="..\:/AndroidProjects/Chat/app/src/main/res/layout/item_container_user.xml" value="0.24635416666666668" />
+        <entry key="..\:/Users/PC/StudioProjects/Chat/app/src/main/res/layout/activity_chat.xml" value="0.21" />
+        <entry key="..\:/Users/PC/StudioProjects/Chat/app/src/main/res/layout/item_container_received_message.xml" value="0.19166666666666668" />
+        <entry key="..\:/Users/PC/StudioProjects/Chat/app/src/main/res/layout/item_container_sent_message.xml" value="0.19166666666666668" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
