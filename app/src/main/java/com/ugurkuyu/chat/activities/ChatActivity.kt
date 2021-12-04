@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
@@ -18,9 +17,8 @@ import com.ugurkuyu.chat.util.Constants
 import com.ugurkuyu.chat.util.PreferenceManager
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : BaseActivity() {
 
     private lateinit var binding: ActivityChatBinding
     private lateinit var receiverUser: User
@@ -29,6 +27,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var preferenceManager: PreferenceManager
     private lateinit var database: FirebaseFirestore
     private var conversationId: String? = null
+    private var isReceiverAvailable = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +75,23 @@ class ChatActivity : AppCompatActivity() {
         }
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message)
         binding.edtInputMessage.text = null
+    }
+
+    private fun listenAvailabilityOfReceiver() {
+        database.collection(Constants.KEY_COLLECTION_USERS)
+            .document(receiverUser.id)
+            .addSnapshotListener { value, error ->
+                value.let {
+                    value?.getLong(Constants.KEY_USER_AVAILABILITY).let {
+                        val availability = value?.getLong(Constants.KEY_USER_AVAILABILITY)?.toInt()
+                        isReceiverAvailable = availability == 1
+                    }
+                }
+                if (isReceiverAvailable) binding.txtAvailability.visibility = View.VISIBLE
+                else binding.txtAvailability.visibility = View.GONE
+
+                error.let { return@addSnapshotListener }
+            }
     }
 
     private fun listenMessages() {
@@ -198,5 +214,10 @@ class ChatActivity : AppCompatActivity() {
             val documentSnapshot = it.result!!.documents[0]
             conversationId = documentSnapshot.id
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        listenAvailabilityOfReceiver()
     }
 }

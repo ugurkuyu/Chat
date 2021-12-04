@@ -23,5 +23,6 @@ class Constants {
         const val KEY_SENDER_IMAGE: String = "senderImage"
         const val KEY_RECEIVER_IMAGE: String = "receiverImage"
         const val KEY_LAST_MESSAGE: String = "lastMessage"
+        const val KEY_USER_AVAILABILITY: String = "availability"
     }
 }

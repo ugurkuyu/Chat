@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Base64
 import android.view.View
@@ -19,7 +18,7 @@ import com.ugurkuyu.chat.models.User
 import com.ugurkuyu.chat.util.Constants
 import com.ugurkuyu.chat.util.PreferenceManager
 
-class MainActivity : AppCompatActivity(), ConversationListener {
+class MainActivity : BaseActivity(), ConversationListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var preferenceManager: PreferenceManager

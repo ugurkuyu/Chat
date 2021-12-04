@@ -3,7 +3,6 @@ package com.ugurkuyu.chat.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.ugurkuyu.chat.adapters.UsersAdapter
@@ -13,7 +12,7 @@ import com.ugurkuyu.chat.models.User
 import com.ugurkuyu.chat.util.Constants
 import com.ugurkuyu.chat.util.PreferenceManager
 
-class UsersActivity : AppCompatActivity(), UserListener {
+class UsersActivity : BaseActivity(), UserListener {
 
     private lateinit var binding: ActivityUsersBinding
     private lateinit var preferenceManager: PreferenceManager
