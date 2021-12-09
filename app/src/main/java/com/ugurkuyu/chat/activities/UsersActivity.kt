@@ -26,13 +26,13 @@ class UsersActivity : BaseActivity(), UserListener {
         getUsers()
     }
 
-    fun setListeners() {
+    private fun setListeners() {
         binding.imgBack.setOnClickListener {
             onBackPressed()
         }
     }
 
-    fun getUsers() {
+    private fun getUsers() {
         loading(true)
         val database: FirebaseFirestore = FirebaseFirestore.getInstance()
         database.collection(Constants.KEY_COLLECTION_USERS).get().addOnCompleteListener {
@@ -53,7 +53,7 @@ class UsersActivity : BaseActivity(), UserListener {
                     users.add(user)
                 }
                 if (users.size > 0) {
-                    val usersAdapter: UsersAdapter = UsersAdapter(users, this)
+                    val usersAdapter = UsersAdapter(users, this)
                     binding.recyclerView.adapter = usersAdapter
                     binding.recyclerView.visibility = View.VISIBLE
                 } else showErrorMessage()
@@ -62,7 +62,7 @@ class UsersActivity : BaseActivity(), UserListener {
         }
     }
 
-    fun loading(isLoading: Boolean) {
+    private fun loading(isLoading: Boolean) {
         if (isLoading) {
             binding.userProgressBar.visibility = View.VISIBLE
         } else {
@@ -70,7 +70,7 @@ class UsersActivity : BaseActivity(), UserListener {
         }
     }
 
-    fun showErrorMessage() {
+    private fun showErrorMessage() {
         binding.txtErrorMessage.text = String.format("%s", "No user available")
         binding.txtErrorMessage.visibility = View.VISIBLE
     }

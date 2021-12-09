@@ -30,7 +30,7 @@ class SignInActivity : AppCompatActivity() {
         setListeners()
     }
 
-    fun setListeners() {
+    private fun setListeners() {
         binding.txtCreateNewAccount.setOnClickListener {
             startActivity(Intent(applicationContext, SignUpActivity::class.java))
         }
@@ -40,7 +40,7 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    fun signIn() {
+    private fun signIn() {
         loading(true)
         val database: FirebaseFirestore = FirebaseFirestore.getInstance()
         database.collection(Constants.KEY_COLLECTION_USERS)
@@ -74,7 +74,7 @@ class SignInActivity : AppCompatActivity() {
         Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
-    fun isValidSignInDetails(): Boolean {
+    private fun isValidSignInDetails(): Boolean {
         return if (binding.edtInputEmail.text.toString().trim().isEmpty()) {
             showToast("Enter Email")
             false

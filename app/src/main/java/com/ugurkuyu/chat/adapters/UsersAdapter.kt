@@ -11,7 +11,7 @@ import com.ugurkuyu.chat.databinding.ItemContainerUserBinding
 import com.ugurkuyu.chat.listeners.UserListener
 import com.ugurkuyu.chat.models.User
 
-class UsersAdapter(private val users: List<User> = listOf<User>(), val listener: UserListener) :
+class UsersAdapter(private val users: List<User> = listOf(), val listener: UserListener) :
     RecyclerView.Adapter<UsersAdapter.UserViewHolder>() {
 
     inner class UserViewHolder(private val binding: ItemContainerUserBinding) :
@@ -25,9 +25,11 @@ class UsersAdapter(private val users: List<User> = listOf<User>(), val listener:
     }
 
 
-    fun getUserImage(encodedImage: String): Bitmap? {
-        val bytes: ByteArray = Base64.decode(encodedImage, Base64.DEFAULT)
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+    fun getUserImage(encodedImage: String?): Bitmap? {
+        return if (encodedImage != null){
+            val bytes: ByteArray = Base64.decode(encodedImage, Base64.DEFAULT)
+            BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        } else null
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {

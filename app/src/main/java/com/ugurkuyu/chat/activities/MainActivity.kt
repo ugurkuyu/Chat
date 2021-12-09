@@ -62,10 +62,6 @@ class MainActivity : BaseActivity(), ConversationListener {
         binding.imageProfile.setImageBitmap(bitmap)
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
-    }
-
     private fun listenConversations() {
         database.collection(Constants.KEY_COLLECT_CONVERSATIONS)
             .whereEqualTo(
@@ -159,6 +155,7 @@ class MainActivity : BaseActivity(), ConversationListener {
     }
 
     private fun updateToken(token: String) {
+        preferenceManager.putString(Constants.KEY_FCM_TOKEN, token)
         val database: FirebaseFirestore = FirebaseFirestore.getInstance()
         val documentReference: DocumentReference =
             database.collection(Constants.KEY_COLLECTION_USERS)

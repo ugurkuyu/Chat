@@ -1,6 +1,7 @@
 package com.ugurkuyu.chat.activities
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,4 +29,9 @@ open class BaseActivity : AppCompatActivity() {
         super.onResume()
         documentReference.update(Constants.KEY_USER_AVAILABILITY, 1)
     }
+
+    fun showToast(message: String) {
+        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+    }
+
 }

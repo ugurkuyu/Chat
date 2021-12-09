@@ -35,7 +35,7 @@ class SignUpActivity : AppCompatActivity() {
         setListeners()
     }
 
-    fun setListeners() {
+    private fun setListeners() {
         binding.txtSignIn.setOnClickListener {
             onBackPressed()
         }
@@ -56,7 +56,7 @@ class SignUpActivity : AppCompatActivity() {
         Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
-    fun signUp() {
+    private fun signUp() {
         loading(true)
         val database: FirebaseFirestore = FirebaseFirestore.getInstance()
         val user: HashMap<String, Any> = hashMapOf()
@@ -84,18 +84,18 @@ class SignUpActivity : AppCompatActivity() {
             }
     }
 
-    fun encodeImage(bitmap: Bitmap): String? {
-        val previewWidth: Int = 150
+    private fun encodeImage(bitmap: Bitmap): String? {
+        val previewWidth = 150
         val previewHeight = bitmap.height * previewWidth / bitmap.width
         val previewBitmap: Bitmap =
             Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false)
-        val byteArrayOutputStream: ByteArrayOutputStream = ByteArrayOutputStream()
+        val byteArrayOutputStream = ByteArrayOutputStream()
         previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream)
         val bytes: ByteArray = byteArrayOutputStream.toByteArray()
         return Base64.encodeToString(bytes, Base64.DEFAULT)
     }
 
-    val pickImage: ActivityResultLauncher<Intent> =
+    private val pickImage: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 if (it.data != null) {
@@ -114,7 +114,7 @@ class SignUpActivity : AppCompatActivity() {
         }
 
 
-    fun isValidSignUpDetails(): Boolean {
+    private fun isValidSignUpDetails(): Boolean {
         return if (encodedImage == null) {
             showToast("Select Profile Image ")
             false

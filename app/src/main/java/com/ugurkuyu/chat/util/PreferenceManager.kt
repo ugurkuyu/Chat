@@ -25,7 +25,7 @@ class PreferenceManager(context: Context) {
     }
 
     fun getString(key: String): String {
-        return sharedPreferences.getString(key, null)!!
+        return sharedPreferences.getString(key, null).toString()
     }
 
     fun clear() {
